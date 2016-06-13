@@ -26,9 +26,12 @@ shinyUI(fluidPage(
                 mainPanel(
                        
                         # h4(htmlOutput("text")),
+                        
                         plotOutput("RegPlot"),
+                        h4(htmlOutput("RegCoef")),
                         tableOutput("coef"),
-                        h4(htmlOutput("text"))
+                        h4(htmlOutput("text")),
+                        tableOutput("meas")
                 )
         )
 ))

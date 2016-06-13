@@ -85,29 +85,49 @@ shinyServer(function(input, output) {
                 dfbetas(fitModel())[,2][1] #dfbeta for the slope
         })
         
-        
-        
-        output$text <- renderUI({
-                str0<-paste("Influence measures for the adjustable point:")
-                str1 <- paste("hatvalue=",round(hv1(),5)) 
-                str2 <- paste("dfbeta.x=",round(dfb1(),5)) 
-                HTML(paste(str0,str1, str2,sep='<br/>'))
+       
+        measures<-reactive({
+                data.frame(
+                        Measure=c("hatvalue",
+                                  "dfbeta.x"),
+                        Value=as.character(c(round(hv1(),5),
+                                             round(dfb1(),5))
+                                           )
+                )
+                
         })
         
+         
+        #title before the coeff table
+        output$RegCoef<-renderText({
+                paste("Linear regression model coefficients")
+        })
         
+        #coeff table
         output$coef<-renderTable({
                 fitCoef()
                 
         })
         
-        output$hv <- renderText({
-              paste("hatvalue=",round(hv1(),5)) 
-                
+        # output$hv <- renderText({
+        #       paste("hatvalue=",round(hv1(),5)) 
+        #         
+        # })
+        # 
+        # output$dfb <- renderText({
+        #         paste("dfbeta.x=",round(dfb1(),5)) 
+        #         
+        # })
+        
+        output$text <- renderUI({
+                str0<-paste("Influence measures for the adjustable point")
+                # str1 <- paste("hatvalue=",round(hv1(),5)) 
+                # str2 <- paste("dfbeta.x=",round(dfb1(),5)) 
+                # HTML(paste(str0,str1, str2,sep='<br/>'))
         })
         
-        output$dfb <- renderText({
-                paste("dfbeta.x=",round(dfb1(),5)) 
+        output$meas<-renderTable({
+                measures()
                 
         })
-        
 })
