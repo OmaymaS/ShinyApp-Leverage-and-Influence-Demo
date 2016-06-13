@@ -13,19 +13,22 @@ shinyUI(fluidPage(
         # mpg and to specify whether outliers should be included
         sidebarLayout(
                 sidebarPanel(
-                        selectInput("pointx", "Choose x coordinate:", 
-                                    choices = c(-10,0,10)
-                                    ),
-                        selectInput("pointy", "Choose y coordinate:", 
-                                    choices = c(-10,0,10)
-                        )
+                        
+                        # Simple integer interval
+                        sliderInput("xx", "X",
+                                    min=-10, max=10, value=0),
+                        
+                        sliderInput("yy", "Y",
+                                    min=-10, max=10, value=0)
                 ),
                 
                 
                 mainPanel(
-                        h4(textOutput("point")),
-                        h4(htmlOutput("text")),
-                        plotOutput("RegPlot")
+                       
+                        # h4(htmlOutput("text")),
+                        plotOutput("RegPlot"),
+                        tableOutput("coef"),
+                        h4(htmlOutput("text"))
                 )
         )
 ))
