@@ -24,7 +24,7 @@ shinyUI(fluidPage(
                 
                 mainPanel(
                         h4(textOutput("point")),
-                        htmlOutput("text"),
+                        h4(htmlOutput("text")),
                         plotOutput("RegPlot")
                 )
         )
