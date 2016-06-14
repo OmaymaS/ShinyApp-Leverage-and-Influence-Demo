@@ -1,39 +1,23 @@
 #Load Libraries
 library(shiny)
-
-
+library(ggplot2)
 
 shinyServer(function(input, output) {
         
-        
+        #generate normally distributed 100 points
         set.seed(1523)
         n <- 100
-        x1 <- c(rnorm(n))
-        y1 <- c(rnorm(n))
+        x1 <- rnorm(n)
+        y1 <- rnorm(n)
         
+        #get slider inputs (x,y)
         xyCoord<-reactive({
                 
                 xy<-c(input$xx,input$yy)
                 as.numeric(xy)
         })
         
-        # output$point <- renderText({
-        #         paste0("x=",xyCoord()[1],sep="")
-        #         # paste0("y=",xyCoord()[2],sep="")
-        # })
-        
-        # output$text <- renderUI({
-        #         str1 <- paste("x=",xyCoord()[1])
-        #         str2 <- paste("y=",xyCoord()[2])
-        #         HTML(paste(str1, str2))
-        # })
-        
-        
-        # dat<-data.frame(X=c(xyCoord()[1],x1), 
-        #                 Y=c(xyCoord()[2],y1)
-        # )
-        # makeReactiveBinding("dat")
-        
+        #create a dataframe with (x,y) and the 100 points
         datxy<-reactive({
                 #add the selected point to the data frame
                 datX<-c(xyCoord()[1],x1)
@@ -42,14 +26,8 @@ shinyServer(function(input, output) {
                 
         })
         
-        
+        #plot the points and the regression line
         output$RegPlot<-renderPlot({
-                #add the selected point to the data frame
-                # dat<-data.frame(X=c(xyCoord()[1],x1), 
-                #                 Y=c(xyCoord()[2],y1)
-                #                 )
-                
-                #plot the points and the regression line
                 ggplot(datxy(),aes(x=X,y=Y))+
                         geom_point(aes(colour=(X==xyCoord()[1]& Y==xyCoord()[2])),
                                    size=3,
@@ -62,11 +40,13 @@ shinyServer(function(input, output) {
                                             values = c('black','red'))+
                         guides(colour=F)
         })
-
+        
+        #fit a linear regression model 
         fitModel<-reactive({
                 lm(Y~X, data=datxy())
         })
         
+        #get the coeff of the model
         fitCoef<-reactive({
                 data.frame(Coefficient=c("Intercept",
                                   "Slope"),
@@ -75,18 +55,19 @@ shinyServer(function(input, output) {
                            )
                 )
         })
-
         
-        hv1<-reactive({
-                hatvalues(fitModel())[1]
-        })
-        
-        dfb1<-reactive({
-                dfbetas(fitModel())[,2][1] #dfbeta for the slope
-        })
-        
-       
+       #create a dataframe with the influence measures
         measures<-reactive({
+                #hatvalue for the selected point
+                hv1<-reactive({
+                        hatvalues(fitModel())[1]
+                })
+                
+                #dfbeta for the slope
+                dfb1<-reactive({
+                        dfbetas(fitModel())[,2][1] 
+                })
+                        
                 data.frame(
                         Measure=c("hatvalue",
                                   "dfbeta.x"),
@@ -99,7 +80,7 @@ shinyServer(function(input, output) {
         
          
         #title before the coeff table
-        output$RegCoef<-renderText({
+        output$CoefTitle<-renderText({
                 paste("Linear regression model coefficients")
         })
         
@@ -109,23 +90,12 @@ shinyServer(function(input, output) {
                 
         })
         
-        # output$hv <- renderText({
-        #       paste("hatvalue=",round(hv1(),5)) 
-        #         
-        # })
-        # 
-        # output$dfb <- renderText({
-        #         paste("dfbeta.x=",round(dfb1(),5)) 
-        #         
-        # })
-        
-        output$text <- renderUI({
-                str0<-paste("Influence measures for the adjustable point")
-                # str1 <- paste("hatvalue=",round(hv1(),5)) 
-                # str2 <- paste("dfbeta.x=",round(dfb1(),5)) 
-                # HTML(paste(str0,str1, str2,sep='<br/>'))
+        #title beforethe influence measures table
+        output$measTitle <- renderText({
+                paste("Influence measures for the adjustable point")
         })
         
+        #influence measure table
         output$meas<-renderTable({
                 measures()
                 

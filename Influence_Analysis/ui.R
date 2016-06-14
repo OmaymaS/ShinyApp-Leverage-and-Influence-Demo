@@ -9,28 +9,30 @@ shinyUI(fluidPage(
         # Application title
         titlePanel("Influence Analysis"),
         
-        # Sidebar with controls to select the variable to plot against
-        # mpg and to specify whether outliers should be included
+        # Sidebar with controls to select the coordinates of the additional point
         sidebarLayout(
+                
+                
+                
                 sidebarPanel(
-                        
-                        # Simple integer interval
+                        helpText("This simple Shiny app demonstrates the leverage and influence of an adjustable point 
+                                 that is part of a dataset with 101 points; 100 of which are normally distributed. You can 
+                                 select the X-Y coordinates of the adjustable point using the following sliders with ranges from
+                                 0-10 for both X and Y. The selected value is shown on the graph in red. "),
+                        #X value
                         sliderInput("xx", "X",
                                     min=-10, max=10, value=0),
-                        
+                        #Y value
                         sliderInput("yy", "Y",
                                     min=-10, max=10, value=0)
                 ),
                 
                 
                 mainPanel(
-                       
-                        # h4(htmlOutput("text")),
-                        
                         plotOutput("RegPlot"),
-                        h4(htmlOutput("RegCoef")),
+                        h4(htmlOutput("CoefTitle")),
                         tableOutput("coef"),
-                        h4(htmlOutput("text")),
+                        h4(htmlOutput("measTitle")),
                         tableOutput("meas")
                 )
         )
