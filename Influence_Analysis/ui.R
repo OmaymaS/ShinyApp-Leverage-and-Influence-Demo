@@ -18,7 +18,7 @@ shinyUI(fluidPage(
                         helpText("This simple Shiny app demonstrates the leverage and influence of an adjustable point 
                                  that is part of a dataset with 101 points; 100 of which are normally distributed. You can 
                                  select the X-Y coordinates of the adjustable point using the following sliders with ranges from
-                                 0-10 for both X and Y. The selected value is shown on the graph in red. "),
+                                 [-10,10] for both X and Y. The adjustable point appears in red on the graph. "),
                         #X value
                         sliderInput("xx", "X",
                                     min=-10, max=10, value=0),
