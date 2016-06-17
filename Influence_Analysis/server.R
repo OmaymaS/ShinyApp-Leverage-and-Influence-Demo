@@ -7,8 +7,8 @@ shinyServer(function(input, output) {
         #generate normally distributed 100 points
         set.seed(1523)
         n <- 100
-        x1 <- rnorm(n)
-        y1 <- rnorm(n)
+        x1 <- rnorm(n) ; x1<-x1-mean(x1) #center the data
+        y1 <- rnorm(n) ; y1<-y1-mean(y1)
         
         #get slider inputs (x,y)
         xyCoord<-reactive({
@@ -63,16 +63,29 @@ shinyServer(function(input, output) {
                         hatvalues(fitModel())[1]
                 })
                 
+                resid1<-reactive({
+                        resid(fitModel())[1]
+                })
+                
                 #dfbeta for the slope
                 dfb1<-reactive({
+                        dfbetas(fitModel())[,1][1] 
+                })
+                
+                #dfbeta for the slope
+                dfbx<-reactive({
                         dfbetas(fitModel())[,2][1] 
                 })
                         
                 data.frame(
                         Measure=c("hatvalue",
+                                  "residual",
+                                  "dfbeta.1",
                                   "dfbeta.x"),
                         Value=as.character(c(round(hv1(),5),
-                                             round(dfb1(),5))
+                                             round(resid1(),5),
+                                             round(dfb1(),5),
+                                             round(dfbx(),5))
                                            )
                 )
                 
